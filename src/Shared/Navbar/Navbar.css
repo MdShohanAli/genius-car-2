@@ -1,0 +1,104 @@
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80px;
+    background-color: #0275d8;
+
+
+}
+
+.logo {
+    height: 60px;
+}
+
+
+
+.nav-links {
+    display: flex;
+    justify-content: end;
+    list-style: none;
+    width: 60%;
+}
+
+.home,
+.about,
+.signup,
+.checkout {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0px 10px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+
+li:hover {
+    color: tomato;
+}
+
+.signup {
+    border: 1px solid yellow;
+    border-radius: 5px;
+}
+
+.mobile-menu-icon {
+    display: none;
+}
+
+@media screen and (max-width:780px) {
+    .logo {
+        display: flex;
+        position: absolute;
+        justify-content: center;
+        /* top: 15px;
+        left: 65px; */
+        height: 30px;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .mobile-menu-icon {
+        position: absolute;
+        display: block;
+        list-style: none;
+        background-color: #005469;
+        left: 0;
+        top: 75px;
+        transition: all 0.5s ease-out;
+        width: 100%;
+    }
+
+    .home,
+    .about,
+    .signup,
+    .checkout {
+        color: white;
+        text-align: center;
+        padding: 32px;
+        width: 100%;
+        transition: all 0.5s ease;
+    }
+
+    .signup {
+        border: none;
+    }
+
+    .mobile-menu-icon {
+        display: block;
+        position: absolute;
+        font-size: 30px;
+        color: white;
+        background-color: #00828c;
+        border: none;
+        outline: none;
+        top: 15px;
+        right: 25px;
+    }
+
+
+}
