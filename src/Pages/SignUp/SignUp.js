@@ -2,33 +2,50 @@ import React, { useRef } from 'react';
 
 import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom'
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../Firebase/Firebase.init'
 import SocialLogin from '../Login/SocialLogin/SocialLogin';
+import { useState } from 'react';
 
 const SignUp = () => {
+    const [agree, setAgree] = useState(false)
     const [
         createUserWithEmailAndPassword,
         user,
         error,
-    ] = useCreateUserWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
     const navigate = useNavigate()
     const emailRef = useRef('')
     const passwordRef = useRef('')
     const conformPasswordRef = useRef('')
 
+    if (user) {
+        console.log(user);
+    }
 
-    const handleFromSubmit = (event) => {
+
+    const handleFromSubmit = async (event) => {
         event.preventDefault()
         const email = emailRef.current.value
         const password = passwordRef.current.value
-        const conformPassword = conformPasswordRef.current.value
-        createUserWithEmailAndPassword(email, password, conformPassword)
+        const name = conformPasswordRef.current.value
+
+
+        await createUserWithEmailAndPassword(email, password, name)
+        await updateProfile({ displayName: name });
+        console.log('Updated profile');
+        navigate('/')
 
     }
-    if (user) {
-        navigate('/')
+    let errorElement;
+    if (error) {
+        errorElement = <div>
+            <p className='text-danger' >Error: {error?.message}</p>
+        </div>
+
     }
+
 
 
     return (
@@ -46,21 +63,22 @@ const SignUp = () => {
 
                     <Form.Control type="password" ref={passwordRef} placeholder="Password" required />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3" controlId="formBasicConformPassword">
 
-                    <Form.Control type="password" ref={conformPasswordRef} placeholder=" conform Password" required />
+                    <Form.Control type="text" ref={conformPasswordRef} placeholder="Your Name" required />
                 </Form.Group>
 
                 <p >already <Link className='text-primary text-decoration-none pe-auto' to='/login' >sign up ?</Link> </p>
-                <input type="checkbox" name="terms" id="terms" />
-                <label htmlFor="terms">Accept genius Car Trams ans Condition </label>
-
+                <input onClick={() => setAgree(!agree)} type="checkbox" name="terms" id="terms" />
+                {/* <label className={agree ? ' px-2 text-primary' : ' px-2 text-danger'} htmlFor="terms">Accept genius Car Trams ans Condition</label> */}
+                <label className={`px-2 ${agree ? ' text-primary' : 'text-danger'}`} htmlFor="terms">Accept genius Car Trams ans Condition</label>
+                <Button disabled={!agree} className='w-50 d-block d-block mx-auto mt-5' variant="primary" type="submit">
+                    Sign Up
+                </Button>
 
             </Form>
-            <Button className='w-50 d-block d-block mx-auto mt-5' variant="primary" type="submit">
-                Sign Up
-            </Button>
-            <p className='text-danger'> {error} </p>
+
+            <p className='text-danger'> {errorElement} </p>
             <SocialLogin></SocialLogin>
 
         </div>
